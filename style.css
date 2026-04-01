@@ -1,0 +1,835 @@
+/* ============================================================
+   SISTEM KASIR - COMPREHENSIVE STYLE GUIDE
+   Color Scheme: Pastel Green (#A8D5BA, #5F9B6D)
+   Font Family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+   ============================================================ */
+
+/* ============================================================
+   CSS VARIABLES & COLOR PALETTE
+   ============================================================ */
+:root {
+    /* Primary Colors */
+    --primary-light: #A8D5BA;
+    --primary-dark: #5F9B6D;
+    --primary-gradient: linear-gradient(135deg, #A8D5BA 0%, #5F9B6D 100%);
+    
+    /* Accent Colors */
+    --accent-green: #52C41A;
+    --accent-green-dark: #389E0D;
+    --accent-yellow: #faad14;
+    --accent-red: #ff4d4f;
+    --accent-red-light: #ff7875;
+    
+    /* Background Colors */
+    --bg-primary: #f5f9f7;
+    --bg-secondary: #f0f5f0;
+    --bg-light: #fafafa;
+    --bg-white: #ffffff;
+    --bg-light-gray: #f9f9f9;
+    --bg-lighter: #f6ffed;
+    --bg-warning: #fff7e6;
+    
+    /* Text Colors */
+    --text-primary: #333333;
+    --text-secondary: #999999;
+    --text-light: #666666;
+    --text-white: #ffffff;
+    
+    /* Border Colors */
+    --border-light: #f0f0f0;
+    --border-default: #d9d9d9;
+    --border-gray: #ddd;
+    --border-warning: #ffbb96;
+    --border-success: #b7eb8f;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 15px rgba(82, 196, 26, 0.2);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.2);
+    --shadow-primary: 0 6px 20px rgba(168, 213, 186, 0.3);
+    --shadow-hover: 0 5px 20px rgba(168, 213, 186, 0.2);
+    
+    /* Radius */
+    --radius-sm: 5px;
+    --radius-md: 10px;
+}
+
+/* ============================================================
+   GLOBAL RESET & BASE STYLES
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+/* ============================================================
+   LAYOUT & CONTAINER
+   ============================================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.container.narrow {
+    max-width: 800px;
+}
+
+.container.medium {
+    max-width: 900px;
+}
+
+/* Login page specific */
+body.login-page {
+    background: var(--primary-gradient);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+body.dashboard-page {
+    background: var(--bg-secondary);
+    padding: 20px;
+    min-height: 100vh;
+}
+
+body.content-page {
+    background: var(--bg-primary);
+    padding: 20px;
+}
+
+/* ============================================================
+   LOGIN COMPONENT
+   ============================================================ */
+.login-container {
+    background: var(--bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    display: flex;
+    max-width: 600px;
+    width: 100%;
+}
+
+.logo-section {
+    background: var(--primary-gradient);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-white);
+    min-width: 200px;
+    font-size: 80px;
+}
+
+.form-section {
+    padding: 40px;
+    flex: 1;
+}
+
+/* ============================================================
+   HEADER STYLES
+   ============================================================ */
+.header {
+    background: var(--primary-gradient);
+    padding: 0;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.header.grid-full {
+    grid-column: 1 / -1;
+}
+
+.logo-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px 60px;
+    min-width: 120px 150px;
+    color: var(--text-white);
+}
+
+.header-content {
+    padding: 20px 25px;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-white);
+}
+
+.header h1,
+.header h2 {
+    color: var(--text-white);
+    font-size: 24px 22px;
+    margin-bottom: 5px 0;
+}
+
+.header p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.back-header {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 8px 15px;
+    margin-left: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    transition: 0.3s ease;
+}
+
+.back-header:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   LOGOUT BUTTON
+   ============================================================ */
+.logout {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--text-white);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.logout:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(168, 213, 186, 0.3);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h2 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+h3 {
+    color: var(--text-primary);
+    margin: 20px 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-light);
+    font-size: 16px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+/* ============================================================
+   GRID LAYOUTS
+   ============================================================ */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stats.three-columns {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.stats.two-columns {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.menu-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.transaction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   CARD COMPONENTS
+   ============================================================ */
+.card,
+.stat-card,
+.menu-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.card {
+    padding: 25px 30px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    padding: 25px;
+    text-align: center;
+    border-top: 4px solid var(--primary-light);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.stat-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary-light);
+}
+
+.stat-label {
+    color: var(--text-light);
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.menu-card {
+    padding: 25px;
+}
+
+.menu-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 12px;
+    font-size: 16px;
+}
+
+.info-item {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: var(--radius-sm);
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--primary-light);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-top: 8px;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.form-group {
+    margin-bottom: 15px 18px 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px 14px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 8px rgba(168, 213, 186, 0.3);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+button,
+.btn,
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-gradient);
+    color: var(--text-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: bold 600;
+    font-size: 14px 15px 16px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+button:hover,
+.btn:hover,
+input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary);
+}
+
+button.warning {
+    background: var(--accent-yellow);
+    color: var(--text-white);
+}
+
+button.warning:hover {
+    background: #f0a800;
+}
+
+button.danger,
+.btn-danger {
+    background: var(--accent-red);
+}
+
+button.danger:hover,
+.btn-danger:hover {
+    background: var(--accent-red-light);
+}
+
+.btn-secondary {
+    background: #8c8c8c;
+    width: auto;
+    display: inline-block;
+    padding: 12px 20px;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background: #595959;
+    transform: translateY(-2px);
+}
+
+.menu-link {
+    display: block;
+    padding: 12px 18px;
+    margin: 8px 0;
+    background: var(--primary-gradient);
+    color: var(--text-white);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500 bold;
+    font-size: 14px 16px;
+}
+
+.menu-link:hover {
+    transform: translateX(5px) translateY(-3px);
+    box-shadow: var(--shadow-primary);
+}
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+a {
+    color: var(--primary-light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #8c8c8c;
+    color: var(--text-white);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background: #595959;
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+table th,
+table td {
+    border: 1px solid var(--border-light);
+    padding: 12px 14px;
+    text-align: left;
+}
+
+table th {
+    background: var(--bg-light);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table tr {
+    transition: background-color 0.2s ease;
+}
+
+table tr:hover {
+    background: var(--bg-light-gray);
+}
+
+table a {
+    color: var(--primary-light);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+table a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* ============================================================
+   MESSAGES & ALERTS
+   ============================================================ */
+.message {
+    padding: 12px 15px;
+    margin-bottom: 20px 15px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    animation: slideIn 0.3s ease;
+}
+
+.success {
+    background: var(--bg-lighter);
+    color: var(--accent-green-dark);
+    border: 1px solid var(--border-success);
+}
+
+.error {
+    background: var(--bg-warning);
+    color: #d4380d;
+    border: 1px solid var(--border-warning);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   CART & TRANSACTION COMPONENTS
+   ============================================================ */
+.cart-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px;
+    font-size: 16px;
+}
+
+.cart-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.cart-actions button {
+    flex: 1;
+}
+
+.cart-total {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: var(--radius-sm);
+    text-align: right;
+    margin-top: 15px;
+    border-top: 2px solid var(--primary-light);
+    color: var(--primary-light);
+}
+
+.total-section {
+    background: linear-gradient(135deg, #f6ffed 0%, #f0f5f0 100%);
+    padding: 20px;
+    border-radius: var(--radius-sm);
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-light);
+    border: 2px solid var(--primary-light);
+    margin-top: 20px;
+}
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+.toolbar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px;
+}
+
+.footer {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-top: 30px;
+    font-size: 12px 13px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .stats,
+    .stats.three-columns {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats.two-columns,
+    .menu-section,
+    .transaction-grid,
+    .info {
+        grid-template-columns: 1fr;
+    }
+    
+    .header {
+        flex-direction: column;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .back-header {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .logo-box {
+        min-width: 100%;
+        min-height: 120px;
+        padding: 20px;
+    }
+    
+    .logo-section {
+        min-width: 100%;
+        min-height: 120px;
+        padding: 20px;
+    }
+    
+    .login-container {
+        flex-direction: column;
+        max-width: 100%;
+    }
+    
+    table {
+        font-size: 12px;
+    }
+    
+    table th,
+    table td {
+        padding: 8px;
+    }
+    
+    button,
+    .btn,
+    input[type="submit"] {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    h3 {
+        font-size: 16px;
+    }
+    
+    .form-section,
+    .card {
+        padding: 20px;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+    }
+    
+    .toolbar button,
+    .toolbar a {
+        width: 100%;
+    }
+    
+    .info-label {
+        font-size: 11px;
+    }
+}
+
+/* ============================================================
+   TRANSITIONS & ANIMATIONS
+   ============================================================ */
+* {
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+button,
+.btn,
+a,
+input,
+select {
+    transition: all 0.3s ease;
+}
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+:focus {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+button:focus,
+.btn:focus,
+input:focus,
+select:focus {
+    outline: none;
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .header,
+    .logout,
+    .toolbar,
+    .back-link {
+        display: none;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
