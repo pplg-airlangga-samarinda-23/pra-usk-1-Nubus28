@@ -25,12 +25,13 @@ if (isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $barang) {
     $kode = $_POST['kode_barang'] ?? '';
     $nama = $_POST['nama_barang'] ?? '';
-    $harga = $_POST['harga'] ?? 0;
+    $harga = intval($_POST['harga'] ?? 0);
+    $stok = intval($_POST['stok'] ?? 0);
     $id = $barang['id'];
 
-    if (!empty($kode) && !empty($nama) && $harga > 0) {
-        $stmt = $koneksi->prepare("UPDATE barang SET kode_barang = ?, nama_barang = ?, harga = ? WHERE id = ?");
-        $stmt->bind_param("ssii", $kode, $nama, $harga, $id);
+    if (!empty($kode) && !empty($nama) && $harga > 0 && $stok >= 0) {
+        $stmt = $koneksi->prepare("UPDATE barang SET kode_barang = ?, nama_barang = ?, harga = ?, stok = ? WHERE id = ?");
+        $stmt->bind_param("ssiii", $kode, $nama, $harga, $stok, $id);
         
         if ($stmt->execute()) {
             $message = "✅ Barang berhasil diupdate!";
@@ -86,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $barang) {
             <input type="text" name="kode_barang" placeholder="Kode Barang" required value="<?php echo htmlspecialchars($barang['kode_barang']); ?>">
             <input type="text" name="nama_barang" placeholder="Nama Barang" required value="<?php echo htmlspecialchars($barang['nama_barang']); ?>">
             <input type="number" name="harga" placeholder="Harga" min="0" required value="<?php echo $barang['harga']; ?>">
+            <input type="number" name="stok" placeholder="Stok" min="0" required value="<?php echo $barang['stok']; ?>">
             <button type="submit">Simpan Perubahan</button>
         </form>
         </div>

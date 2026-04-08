@@ -20,33 +20,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $jumlah = intval($_POST['jumlah'] ?? 0);
 
     if (!empty($barang_id) && $jumlah > 0) {
-        $stmt = $koneksi->prepare("SELECT id, nama_barang, harga FROM barang WHERE id = ?");
+        $stmt = $koneksi->prepare("SELECT id, nama_barang, harga, stok FROM barang WHERE id = ?");
         $stmt->bind_param("i", $barang_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
             $barang = $result->fetch_assoc();
-            
-            // Check if already in cart
-            $found = false;
-            foreach ($_SESSION['cart'] as &$item) {
+            $currentCartQty = 0;
+            foreach ($_SESSION['cart'] as $item) {
                 if ($item['id'] == $barang_id) {
-                    $item['jumlah'] += $jumlah;
-                    $found = true;
+                    $currentCartQty = $item['jumlah'];
                     break;
                 }
             }
-            
-            if (!$found) {
-                $_SESSION['cart'][] = [
-                    'id' => $barang['id'],
-                    'nama' => $barang['nama_barang'],
-                    'harga' => $barang['harga'],
-                    'jumlah' => $jumlah
-                ];
+
+            if ($currentCartQty + $jumlah > $barang['stok']) {
+                $message = "❌ Stok tidak cukup. Tersedia: " . $barang['stok'] . ".";
+            } else {
+                $found = false;
+                foreach ($_SESSION['cart'] as &$item) {
+                    if ($item['id'] == $barang_id) {
+                        $item['jumlah'] += $jumlah;
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $_SESSION['cart'][] = [
+                        'id' => $barang['id'],
+                        'nama' => $barang['nama_barang'],
+                        'harga' => $barang['harga'],
+                        'jumlah' => $jumlah
+                    ];
+                }
+                $message = "✅ " . $barang['nama_barang'] . " ditambahkan ke keranjang!";
             }
-            $message = "✅ " . $barang['nama_barang'] . " ditambahkan ke keranjang!";
         } else {
             $message = "❌ Barang tidak ditemukan!";
         }
@@ -73,26 +83,48 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
             $total += $item['harga'] * $item['jumlah'];
         }
 
-        // Insert transaction
+        $koneksi->begin_transaction();
+        $validStock = true;
+
         $stmt = $koneksi->prepare("INSERT INTO transaksi (total, petugas_id) VALUES (?, ?)");
         $stmt->bind_param("ii", $total, $petugas_id);
-        
+
         if ($stmt->execute()) {
             $transaksi_id = $stmt->insert_id;
 
-            // Insert transaction details
             foreach ($_SESSION['cart'] as $item) {
                 $subtotal = $item['harga'] * $item['jumlah'];
+
+                $stmtUpdate = $koneksi->prepare("UPDATE barang SET stok = stok - ? WHERE id = ? AND stok >= ?");
+                $stmtUpdate->bind_param("iii", $item['jumlah'], $item['id'], $item['jumlah']);
+                $stmtUpdate->execute();
+
+                if ($stmtUpdate->affected_rows === 0) {
+                    $validStock = false;
+                    $stmtUpdate->close();
+                    break;
+                }
+                $stmtUpdate->close();
+
                 $stmtDetail = $koneksi->prepare("INSERT INTO transaksi_detail (transaksi_id, barang_id, jumlah, subtotal) VALUES (?, ?, ?, ?)");
                 $stmtDetail->bind_param("iiii", $transaksi_id, $item['id'], $item['jumlah'], $subtotal);
                 $stmtDetail->execute();
                 $stmtDetail->close();
             }
 
-            // Clear cart
-            $_SESSION['cart'] = [];
-            $message = "✅ Transaksi berhasil! Total: Rp" . number_format($total);
+            if ($validStock) {
+                $koneksi->commit();
+                $_SESSION['cart'] = [];
+                $message = "✅ Transaksi berhasil! Total: Rp" . number_format($total);
+            } else {
+                $koneksi->rollback();
+                $message = "❌ Stok tidak cukup untuk melakukan checkout. Silakan periksa kembali keranjang.";
+            }
+        } else {
+            $koneksi->rollback();
+            $message = "❌ Gagal membuat transaksi. Silakan coba lagi.";
         }
+
         $stmt->close();
     } else {
         $message = "❌ Keranjang kosong!";
@@ -100,7 +132,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
 }
 
 // Get barang list
-$resultBarang = $koneksi->query("SELECT id, nama_barang, harga FROM barang ORDER BY nama_barang");
+$resultBarang = $koneksi->query("SELECT id, nama_barang, harga, stok FROM barang ORDER BY nama_barang");
 if ($resultBarang) {
     while ($row = $resultBarang->fetch_assoc()) {
         $barang_list[] = $row;
@@ -162,8 +194,8 @@ foreach ($_SESSION['cart'] as $item) {
                     <select name="barang_id" required>
                         <option value="">-- Pilih Barang --</option>
                         <?php foreach ($barang_list as $b): ?>
-                            <option value="<?php echo $b['id']; ?>">
-                                <?php echo $b['nama_barang'] . " | Rp" . number_format($b['harga']); ?>
+                            <option value="<?php echo $b['id']; ?>" <?php echo $b['stok'] <= 0 ? 'disabled' : ''; ?> >
+                                <?php echo $b['nama_barang'] . " | Rp" . number_format($b['harga']) . " | Stok: " . intval($b['stok']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

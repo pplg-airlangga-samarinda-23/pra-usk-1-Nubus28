@@ -6,23 +6,33 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     die("Akses ditolak!");
 }
 
+$message = "";
+
+// Hapus barang
+if (isset($_GET['delete'])) {
+    $id = intval($_GET['delete']);
+
+    $stmtUpdate = $koneksi->prepare("UPDATE transaksi_detail SET barang_id = NULL WHERE barang_id = ?");
+    $stmtUpdate->bind_param("i", $id);
+    $stmtUpdate->execute();
+    $stmtUpdate->close();
+
+    $stmt = $koneksi->prepare("DELETE FROM barang WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    if ($stmt->execute()) {
+        $message = "Barang berhasil dihapus. Riwayat transaksi tetap disimpan.";
+    } else {
+        $message = "Gagal menghapus barang. Silakan coba lagi.";
+    }
+    $stmt->close();
+}
+
 $barang_list = [];
 $result = $koneksi->query("SELECT * FROM barang ORDER BY id DESC");
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $barang_list[] = $row;
     }
-}
-
-// Hapus barang
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $stmt = $koneksi->prepare("DELETE FROM barang WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-    header("Location: lihat_barang.php");
-    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -63,34 +73,43 @@ if (isset($_GET['delete'])) {
         </div>
         
         <div class="card">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th>Harga</th>
-                <th>Aksi</th>
-            </tr>
-        </thead></a> 
-                    <a href="lihat_barang.php?delete=<?php echo $b['id']; ?>" class="btn-danger" onclick="return confirm('Hapus barang ini?')">🗑️
-            <?php foreach ($barang_list as $b): ?>
+            <?php if ($message): ?>
+                <div class="message <?php echo strpos($message, 'berhasil') !== false ? 'success' : 'error'; ?>">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($barang_list as $b): ?>
             <tr>
                 <td><?php echo $b['id']; ?></td>
                 <td><?php echo htmlspecialchars($b['kode_barang']); ?></td>
                 <td><?php echo htmlspecialchars($b['nama_barang']); ?></td>
                 <td>Rp <?php echo number_format($b['harga']); ?></td>
+                <td><?php echo intval($b['stok']); ?></td>
                 <td>
                     <a href="edit_barang.php?id=<?php echo $b['id']; ?>">✏️ Edit</a>
                     <a href="lihat_barang.php?delete=<?php echo $b['id']; ?>" class="btn-delete" onclick="return confirm('Hapus barang ini?')">🗑️ Hapus</a>
                 </td>
             </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-    <?php if (empty($barang_list)): ?>
-    <p style="text-align: center; color: #999;">Belum ada barang. <a href="tambah_barang.php">Tambah sekarang</a></p>
-    <?php endif; ?>
+        <?php if (empty($barang_list)): ?>
+            <p style="text-align: center; color: #999;">Belum ada barang. <a href="tambah_barang.php">Tambah sekarang</a></p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>

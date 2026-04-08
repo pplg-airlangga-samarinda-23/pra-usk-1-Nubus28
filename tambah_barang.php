@@ -11,11 +11,12 @@ $message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $kode = $_POST['kode_barang'] ?? '';
     $nama = $_POST['nama_barang'] ?? '';
-    $harga = $_POST['harga'] ?? 0;
+    $harga = intval($_POST['harga'] ?? 0);
+    $stok = intval($_POST['stok'] ?? 0);
 
-    if (!empty($kode) && !empty($nama) && $harga > 0) {
-        $stmt = $koneksi->prepare("INSERT INTO barang (kode_barang, nama_barang, harga) VALUES (?, ?, ?)");
-        $stmt->bind_param("ssi", $kode, $nama, $harga);
+    if (!empty($kode) && !empty($nama) && $harga > 0 && $stok >= 0) {
+        $stmt = $koneksi->prepare("INSERT INTO barang (kode_barang, nama_barang, harga, stok) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssii", $kode, $nama, $harga, $stok);
         
         if ($stmt->execute()) {
             $message = "✅ Barang berhasil ditambahkan!";
@@ -69,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="text" name="kode_barang" placeholder="Kode Barang (cth: BRG001)" required value="<?php echo $_POST['kode_barang'] ?? ''; ?>">
             <input type="text" name="nama_barang" placeholder="Nama Barang (cth: Mie Instan)" required value="<?php echo $_POST['nama_barang'] ?? ''; ?>">
             <input type="number" name="harga" placeholder="Harga (cth: 5000)" min="0" required value="<?php echo $_POST['harga'] ?? ''; ?>">
+            <input type="number" name="stok" placeholder="Stok awal" min="0" required value="<?php echo $_POST['stok'] ?? '0'; ?>">
             <button type="submit">Simpan Barang</button>
         </form>
     </div>

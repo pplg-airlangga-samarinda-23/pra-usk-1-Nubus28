@@ -11,7 +11,8 @@ CREATE TABLE barang (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kode_barang VARCHAR(10) NOT NULL UNIQUE,
     nama_barang VARCHAR(100) NOT NULL,
-    harga INT NOT NULL
+    harga INT NOT NULL,
+    stok INT NOT NULL DEFAULT 0
 );
 
 -- Tabel transaksi (header)
@@ -40,9 +41,9 @@ INSERT INTO users (username, password, role) VALUES
 ('petugas1', 'petugas123', 'petugas');
 
 -- Insert data barang sample
-INSERT INTO barang (kode_barang, nama_barang, harga) VALUES 
-('BRG001', 'Mie Instan', 3000),
-('BRG002', 'Teh Pucuk', 5000),
-('BRG003', 'Rokok Sampoerna', 25000),
-('BRG004', 'Sabun Lifebuoy', 8000),
-('BRG005', 'Pasta Gigi Sensodyne', 18000);
+INSERT INTO barang (kode_barang, nama_barang, harga, stok) VALUES 
+('BRG001', 'Mie Instan', 3000, 50),
+('BRG002', 'Teh Pucuk', 5000, 30),
+('BRG003', 'Rokok Sampoerna', 25000, 20),
+('BRG004', 'Sabun Lifebuoy', 8000, 25),
+('BRG005', 'Pasta Gigi Sensodyne', 18000, 15);
